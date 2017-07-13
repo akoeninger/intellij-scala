@@ -1,6 +1,7 @@
 package org.jetbrains.plugins.scaladev;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -81,9 +82,11 @@ public class IdeaSourcesAttach extends AbstractProjectComponent {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                AttachSourcesUtil.appendSources(library, roots.toArray(new VirtualFile[roots.size()]));
+                                if (!myProject.isDisposed()) {
+                                    AttachSourcesUtil.appendSources(library, roots.toArray(new VirtualFile[roots.size()]));
+                                }
                             }
-                        });
+                        }, ModalityState.current());
                     }
                 }
                 LOG.info("Finished attaching IDEA sources");
