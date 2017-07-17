@@ -141,6 +141,13 @@ package object collections {
     }
   }
 
+  object IfThenStmt {
+    def unapply(expr: ScExpression): Option[(ScExpression, ScExpression)] = expr match {
+      case ScIfStmt(Some(c), Some(stripped(tb)), None) => Some(c, tb)
+      case _ => None
+    }
+  }
+
   object literal {
     def unapply(expr: ScExpression): Option[String] = {
       expr match {
